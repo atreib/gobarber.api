@@ -30,7 +30,7 @@
               "ts": "never"
             }
 		],
-		"indent": ["error", 4, "tab"],
+		"indent": ["error", "tab"],
 		"prettier/prettier": "error"
     },
     "settings": {
