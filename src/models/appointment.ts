@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export interface ICreateAppointmentDto {
 	provider: string;
@@ -11,18 +11,16 @@ export interface IAppointment {
 	date: Date;
 }
 
+@Entity('appointments')
 class Appointment implements IAppointment {
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
+	@Column()
 	provider: string;
 
+	@Column('timestamp with time zone')
 	date: Date;
-
-	constructor({ provider, date }: Omit<IAppointment, 'id'>) {
-		this.id = uuid();
-		this.provider = provider;
-		this.date = date;
-	}
 }
 
 export default Appointment;
