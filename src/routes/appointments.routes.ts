@@ -3,10 +3,15 @@ import { Router, Request, Response } from 'express';
 import { parseISO } from 'date-fns';
 import AppointmentsRepository from '../repositories/appointments';
 import CreateAppointmentService from '../services/CreateAppointment';
+import MiddlewareEnsureAuthenticated from '../middleware/ensureAuthenticated';
 
 const appointmentsRouter = Router();
 
+appointmentsRouter.use(MiddlewareEnsureAuthenticated);
+
 appointmentsRouter.get('/', async (req: Request, res: Response) => {
+	// podemos pegar o user autenticado graças ao nosso middleware
+	// console.log('user: ', req.user);
 	const appointmentsRepository = getCustomRepository(AppointmentsRepository);
 	const appointments = await appointmentsRepository.find();
 	return res.json(appointments);
