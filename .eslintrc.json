@@ -30,6 +30,7 @@
               "ts": "never"
             }
 		],
+		"camelcase": "off",
 		"indent": ["error", "tab"],
 		"prettier/prettier": "error"
     },
