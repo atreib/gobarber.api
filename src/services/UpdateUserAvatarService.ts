@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import User from '../models/user';
 import uploadConfig from '../config/upload';
+import AppError from '../errors/AppError';
 
 interface Request {
 	user_id: string;
@@ -14,7 +15,7 @@ class UpdateUserAvatarService {
 	public async execute({ user_id, avatarFilename }: Request): Promise<User> {
 		const userRepository = getRepository(User);
 		const user = await userRepository.findOne(user_id);
-		if (!user) throw new Error('You need to be logged in.');
+		if (!user) throw new AppError('You need to be logged in.', 401);
 
 		if (user.avatar) {
 			// delete actual user avatar

@@ -3,6 +3,7 @@ import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/appointment';
 import AppointmentsRepository from '../repositories/appointments';
+import AppError from '../errors/AppError';
 
 interface Request {
 	provider_id: string;
@@ -20,7 +21,7 @@ export default class CreateAppointmentService {
 		const result = await appointmentsRepository.findAppointmentByDate(
 			appointmentDate,
 		);
-		if (result) throw Error('Horário não disponível');
+		if (result) throw new AppError('Horário não disponível', 400);
 
 		const newAppointment = appointmentsRepository.create({
 			provider_id,

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import AuthConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface TokenPayload {
 	iat: number;
@@ -14,7 +15,7 @@ export default function MiddlewareEnsureAuthenticated(
 	next: NextFunction,
 ): void {
 	const authHeader = request.headers.authorization;
-	if (!authHeader) throw new Error('JWT is missing');
+	if (!authHeader) throw new AppError('JWT is missing', 401);
 
 	const [, token] = authHeader.split(' ');
 
@@ -24,6 +25,6 @@ export default function MiddlewareEnsureAuthenticated(
 		request.user = { id: sub };
 		return next();
 	} catch {
-		throw new Error('Unauthorized access');
+		throw new AppError('Unauthorized access', 401);
 	}
 }

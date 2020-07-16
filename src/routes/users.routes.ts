@@ -19,25 +19,19 @@ usersRouter.get('/', async (req: Request, res: Response) => {
 });
 
 usersRouter.post('/', async (req: Request, res: Response) => {
-	try {
-		const { name, email, password } = req.body;
+	const { name, email, password } = req.body;
 
-		const createUserService = new CreateUserService();
+	const createUserService = new CreateUserService();
 
-		const user = await createUserService.execute({
-			name,
-			email,
-			password,
-		});
+	const user = await createUserService.execute({
+		name,
+		email,
+		password,
+	});
 
-		delete user.password;
+	delete user.password;
 
-		return res.json(user);
-	} catch (err) {
-		return res.status(400).json({
-			message: err.message,
-		});
-	}
+	return res.json(user);
 });
 
 usersRouter.patch(
@@ -45,20 +39,14 @@ usersRouter.patch(
 	MiddlewareEnsureAuthenticated,
 	upload.single('avatar'),
 	async (req: Request, res: Response) => {
-		try {
-			const { filename } = req.file; // , path, size
-			const updateUserAvatarService = new UpdateUserAvatarService();
-			const user = await updateUserAvatarService.execute({
-				user_id: req.user.id,
-				avatarFilename: filename,
-			});
-			delete user.password;
-			return res.json(user);
-		} catch (err) {
-			return res.status(400).json({
-				message: err.message,
-			});
-		}
+		const { filename } = req.file; // , path, size
+		const updateUserAvatarService = new UpdateUserAvatarService();
+		const user = await updateUserAvatarService.execute({
+			user_id: req.user.id,
+			avatarFilename: filename,
+		});
+		delete user.password;
+		return res.json(user);
 	},
 );
 
