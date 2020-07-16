@@ -1,9 +1,13 @@
 import { getRepository } from 'typeorm';
 import { Router, Request, Response } from 'express';
+import multer from 'multer';
+import uploadConfig from '../config/upload';
 import CreateUserService from '../services/CreateUser';
 import User from '../models/user';
+import MiddlewareEnsureAuthenticated from '../middleware/ensureAuthenticated';
 
 const usersRouter = Router();
+const upload = multer(uploadConfig);
 
 usersRouter.get('/', async (req: Request, res: Response) => {
 	const usersRepository = getRepository(User);
@@ -32,5 +36,15 @@ usersRouter.post('/', async (req: Request, res: Response) => {
 		});
 	}
 });
+
+usersRouter.patch(
+	'/avatar',
+	MiddlewareEnsureAuthenticated,
+	upload.single('avatar'),
+	async (req: Request, res: Response) => {
+		const { filename, path, size } = req.file;
+		return res.json({ ok: true });
+	},
+);
 
 export default usersRouter;
